@@ -139,5 +139,27 @@ Receives data to a specific I2C device in master mode.
 ### Task 4: Potentiometer ADC Periheral
 
 ```c
-
+HAL_StatusTypeDef HAL_ADC_Start(ADC_HandleTypeDef *hadc);
 ```
+Starts ADC conversion in polling mode.
+- hadc: ADC handle.
+  
+```c
+HAL_StatusTypeDef HAL_ADC_PollForConversion(ADC_HandleTypeDef *hadc, uint32_t Timeout);
+```
+Waits for the end of ADC conversion.
+- hadc: ADC handle.
+- Timeout: Timeout duration.
+    
+```c
+uint32_t HAL_ADC_GetValue(ADC_HandleTypeDef *hadc);
+```
+Gets the converted ADC value after the conversion is complete.
+- hadc: ADC handle.
+- Returns: The converted digital value (0 to 4095 for 12-bit resolution).
+
+```c
+HAL_StatusTypeDef HAL_ADC_Stop(ADC_HandleTypeDef *hadc);
+```
+Stops the ADC conversion.
+- hadc: ADC handle.
