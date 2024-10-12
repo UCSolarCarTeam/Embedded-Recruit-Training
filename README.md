@@ -1,165 +1,136 @@
-# Embedded Recruit Training
+# FreeRTOS
 
-## STM32 Project File System
+## What is FreeRTOS?
 
-STM32 projects typically follow a structured file system that separates different components to enhance maintainability and scalability. The key components include:
+FreeRTOS is an open-source, real-time operating system (RTOS) for embedded systems. It allows you to manage tasks, memory, and hardware efficiently, making it ideal for time-critical applications. Key features include:
 
-- **Core**: Contains the startup files, system configurations, and core libraries (e.g., `main.c`, `stm32f4xx_it.c` for interrupt handling, and `syscalls.c`).
-  
-- **Drivers**: Includes hardware abstraction libraries such as the **HAL** (Hardware Abstraction Layer), **CMSIS** (Cortex Microcontroller Software Interface Standard), and device-specific drivers (e.g., `stm32f4xx_hal_gpio.c` for GPIO handling).
+- Multitasking: Supports concurrent tasks with priority-based scheduling.
+- Task Scheduling: Preemptive scheduler ensures high-priority tasks run when needed.
+- Inter-task Communication: Uses queues, semaphores, and mutexes to synchronize tasks.
+- Deterministic: Provides predictable execution for real-time applications.
+- Portability: Runs on various microcontrollers like STM32.
 
-- **Core/Inc**: Header files that define the interfaces for functions used throughout the project (e.g., `main.h`, `stm32f4xx_hal_conf.h`).
+FreeRTOS is widely used in IoT, automation, and embedded systems due to its lightweight and efficient design.
 
-- **Core/Src**: Source files for the application code. This includes `main.c` where the user defines the primary application logic, along with other peripheral-specific files.
+## What is CMSIS RTOS v2?
 
-- **Middlewares**: Optional directory that contains third-party libraries or additional software components like RTOS, file systems, or USB stacks.
+CMSIS RTOS v2 is a standardized RTOS API developed by ARM, often used with FreeRTOS. It provides a common interface for real-time applications on ARM Cortex-M microcontrollers like STM32. Key points:
 
-## What is HAL?
+- Standardized API: Allows easy switching between different RTOS kernels without changing code.
+- ARM Ecosystem Integration: Works seamlessly with STM32 and other ARM-based microcontrollers.
+- Built on FreeRTOS: Provides a unified interface with the flexibility of FreeRTOS.
 
-**HAL (Hardware Abstraction Layer)** is a set of libraries provided by STMicroelectronics to simplify the development process on STM32 microcontrollers. HAL provides a high-level interface for interacting with the MCU's peripherals like GPIO, SPI, UART, and more, allowing developers to write code that is more portable across different STM32 devices.
+CMSIS RTOS v2 simplifies real-time task management and is commonly used in embedded systems with STM32.
 
-By using HAL, developers can avoid dealing directly with hardware registers, which speeds up development, improves readability, and reduces the complexity of peripheral configurations.
+## Important Functions 
 
-[Here is a link to additional resources on getting started with STM32](https://wiki.st.com/stm32mcu/wiki/Microcontroller)
+`osThreadId_t osThreadNew (osThreadFunc_t func, void *argument, const osThreadAttr_t *attr)`
+Function: Creates a new thread (task).
+Explanation: This function is used to create and initialize a thread (task) with specific attributes like priority, stack size, and a function to execute. It allows for multitasking by running multiple threads concurrently.
+Usage: Similar to xTaskCreate() in FreeRTOS, used to define the behavior of tasks in your embedded system.
 
-## What you will do...
+`osStatus_t osDelay (uint32_t millisec)`
+Function: Delays a thread for a given time period.
+Explanation: This function suspends the calling thread for a specified number of milliseconds, allowing other threads to run during the delay. It's useful for implementing time-based operations.
+Usage: Commonly used to introduce a wait time between thread executions or manage periodic tasks.
 
-The goal of this training is to get you comfortable with the STM32 environment.
+`osMutexId_t osMutexNew (const osMutexAttr_t *attr)`
+Function: Creates a new mutex.
+Explanation: A mutex (mutual exclusion) is used to protect shared resources from simultaneous access by multiple threads. osMutexNew() creates a mutex that threads can lock and unlock.
+Usage: Essential for preventing data corruption when multiple threads need to access shared variables or hardware peripherals.
 
-You will implement functions found in the `Core/Src` folder starting with task `0_BlinkyLED.c`.
+`osSemaphoreId_t osSemaphoreNew (uint32_t max_count, uint32_t initial_count, const osSemaphoreAttr_t *attr)`
+Function: Creates a semaphore.
+Explanation: Semaphores are synchronization tools used to signal between threads or manage access to limited resources. osSemaphoreNew() creates a counting semaphore that threads can acquire and release.
+Usage: Useful in resource-limited situations where a fixed number of resources are available (e.g., a limited number of hardware peripherals).
 
-### Task 0: Blinky LED
-
-```c
-HAL_StatusTypeDef HAL_GPIO_WritePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState);
-```
-Sets the state of the specified GPIO pin.
-- GPIOx: GPIO port.
-- GPIO_Pin: GPIO pin number.
-- PinState: Desired pin state (GPIO_PIN_SET or GPIO_PIN_RESET).
-
-```c
-GPIO_PinState HAL_GPIO_ReadPin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
-```
-Sets the state of the specified GPIO pin.
-- GPIOx: GPIO port.
-- GPIO_Pin: GPIO pin number.
-- Returns: The pin state (GPIO_PIN_SET or GPIO_PIN_RESET).
+`osMessageQueueId_t osMessageQueueNew (uint32_t msg_count, uint32_t msg_size, const osMessageQueueAttr_t *attr);`
+Function: Creates a message queue.
+Explanation: This function creates a message queue that allows threads to send and receive messages in a FIFO manner. Message queues are used for inter-task communication and data sharing between threads.
+Usage: Ideal for passing data between threads, such as sensor readings or control commands.
 
 
-### Task 1: UART Transmit
-
-```c
-HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
-```
-Sends data through UART in blocking mode.
-- huart: UART handle.
-- pData: Data buffer.
-- Size: Size of the data.
-- Timeout: Timeout duration.
-
+Below is the struct used to define thread attributes
+If you dont define a value to an attribute, then it will initialize to it's default value
 
 ```c
-HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+typedef struct {
+    const char *name; /* Thread name */
+    uint32_t attr_bits; /* Bitmask to configure the thread: this is meaningless in FreeR\
+    TOS */
+    void *cb_mem; /* Control block to hold thread's data (default: NULL).
+    Used only for static allocation */
+    uint32_t cb_size; /* Size of provided memory for control block (default: 0) */
+    void *stack_mem; /* Pointer to the memory holding the thread stack (default: NULL)\
+    Used only for static allocation */
+    uint32_t stack_size; /* Size of provided memory for stack (default: 128 * 4) */
+    osPriority_t priority; /* Initial thread priority (default: osPriorityNormal) */
+    TZ_ModuleId_t tz_module; /* TrustZone module identifier (used in Cortex-M33 based MCUs) */
+    uint32_t reserved; /* Reserved (must be 0) */
+} osThreadAttr_t;
 ```
-Receives data through UART in blocking mode.
-- huart: UART handle.
-- pData: Data buffer.
-- Size: Size of the data.
-- Timeout: Timeout duration.
-
-### Task 2: Accelerometer SPI Peripheral
-
-```c
-HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout);
-```
-Sends data through SPI in blocking mode.
-- hspi: SPI handle.
-- pData: Data buffer.
-- Size: Size of the data.
-- Timeout: Timeout duration.
 
 ```c
-HAL_StatusTypeDef HAL_SPI_Receive(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout);
-```
-Receives data through SPI in blocking mode.
-- hspi: SPI handle.
-- pData: Data buffer.
-- Size: Size of the data.
-- Timeout: Timeout duration.
+/* Sample Thread Definition */
 
-### Task 3: Lux Sensor I2C Peripheral
-  
-```c
-HAL_StatusTypeDef HAL_I2C_Mem_Read(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData, uint16_t Size, uint32_t Timeout);
-```
-Reads data from a specific memory address on an I2C device.
-- hi2c: I2C handle.
-- DevAddress: I2C device address.
-- MemAddress: Memory address.
-- MemAddSize: Size of the memory address.
-- pData: Data buffer.
-- Size: Size of the data.
-- Timeout: Timeout duration.
+// This is the actual function/TASK that will be run in the thread
+void blinkyThread (void *argument) {
+  // ...
+  for (;;) {
+    // blink LED or something
+  }
+}
+ 
+// Think of this as the handle for the thread
+osThreadId_t blinkThreadID;
 
-```c
-HAL_StatusTypeDef HAL_I2C_Mem_Write(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData, uint16_t Size, uint32_t Timeout);
-```
-Writes data to a specific memory address on an I2C device.
-- hi2c: I2C handle.
-- DevAddress: I2C device address.
-- MemAddress: Memory address to write to.
-- MemAddSize: Size of the memory address.
-- pData: Data buffer containing the data to be written.
-- Size: Size of the data.
-- Timeout: Timeout duration.
+// Define attributes for the thread
+const osThreadAttr_t blinkThread_attr = {
+    .name = "blinkThread"
+    .stack_size = 1024,                             // Create the thread stack with a size of 1024 bytes
+    .priority = (osPriority_t) osPriorityNormal     
+};
 
-#### Note: Extra I2C functions but for general communication with a peripheral without internal registers (Not needed for task)
+int main (void) {
+    /* Init scheduler */
+    osKernelInitialize()
 
-```c
-HAL_StatusTypeDef HAL_I2C_Master_Transmit(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout);
-```
-Sends data to a specific I2C device in master mode.
-- hi2c: I2C handle.
-- DevAddress: I2C device address.
-- pData: Data buffer.
-- Size: Size of the data.
-- Timeout: Timeout duration.
-  
-```c
-HAL_StatusTypeDef HAL_I2C_Master_Receive(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout);
-```
-Receives data to a specific I2C device in master mode.
-- hi2c: I2C handle.
-- DevAddress: I2C device address.
-- pData: Data buffer.
-- Size: Size of the data.
-- Timeout: Timeout duration.
-
-### Task 4: Potentiometer ADC Periheral
-
-```c
-HAL_StatusTypeDef HAL_ADC_Start(ADC_HandleTypeDef *hadc);
-```
-Starts ADC conversion in polling mode.
-- hadc: ADC handle.
-  
-```c
-HAL_StatusTypeDef HAL_ADC_PollForConversion(ADC_HandleTypeDef *hadc, uint32_t Timeout);
-```
-Waits for the end of ADC conversion.
-- hadc: ADC handle.
-- Timeout: Timeout duration.
+    /* Creation of thread1 Task */
+    blinkThreadID = osThreadNew(blinkThread, NULL, &blinkThread_attr);    // Create thread with custom sized stack memory
     
-```c
-uint32_t HAL_ADC_GetValue(ADC_HandleTypeDef *hadc);
-```
-Gets the converted ADC value after the conversion is complete.
-- hadc: ADC handle.
-- Returns: The converted digital value (0 to 4095 for 12-bit resolution).
+    /* Start scheduler */
+    osKernelStart();
 
-```c
-HAL_StatusTypeDef HAL_ADC_Stop(ADC_HandleTypeDef *hadc);
+    /* We should never get here as control is now taken by the scheduler */
+    while (1);
+}
 ```
-Stops the ADC conversion.
-- hadc: ADC handle.
+
+--- 
+# TODO...
+
+## Task 1: SPI Task
+- Read data from accelerometer
+- Send through UART line
+- Priority: osPriorityNormal  
+
+## Task 2: I2C Task
+- Read data from Lux Sensor
+- Send through UART line
+- Priority: osPriorityNormal
+
+## Task 3: ADC Task
+- Read ADC data from potentiometer
+- Send through UART line
+- Priority: osPriorityNormal
+
+## Task 4: Blink LED (Optional) Do this after everything before
+- Suspend all tasks
+- Blink LEDs three times
+- This occurs every 5 seconds
+- Priority: osPriorityAboveNormal
+
+## Note:
+You must include `"cmsis_os2.h"` in your task file in order to use the CMSIS RTOS API
+
+

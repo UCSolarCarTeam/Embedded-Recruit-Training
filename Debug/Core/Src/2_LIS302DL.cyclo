@@ -1,0 +1,5 @@
+../Core/Src/2_LIS302DL.c:8:6:lis302dl_Read_Register	1
+../Core/Src/2_LIS302DL.c:31:6:lis302dl_Write_Register	1
+../Core/Src/2_LIS302DL.c:56:6:lis302dl_Init	1
+../Core/Src/2_LIS302DL.c:71:6:lis302dl_Display_Led	5
+../Core/Src/2_LIS302DL.c:105:6:lis302dl_Poll_Data	1

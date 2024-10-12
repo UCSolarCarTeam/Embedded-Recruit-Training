@@ -16,9 +16,9 @@ void blinky_LED() {
 	 * PinState: GPIO_PIN_RESET/GPIO_PIN_SET
 	 */
 
-	HAL_GPIO_TogglePin(GPIOx, GPIO_Pin);
-	HAL_GPIO_WritePin(GPIOx, GPIO_Pin, PinState);
+//	HAL_GPIO_TogglePin(GPIOx, GPIO_Pin);
+//	HAL_GPIO_WritePin(GPIOx, GPIO_Pin, PinState);
 
 	// Delay in milliseconds
-	HAL_Delay(Delay);
+//	HAL_Delay(Delay);
 }

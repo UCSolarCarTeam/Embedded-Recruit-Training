@@ -60,8 +60,8 @@ all: main-build
 main-build: Embedded-Recruit-Training.elf secondary-outputs
 
 # Tool invocations
-Embedded-Recruit-Training.elf Embedded-Recruit-Training.map: $(OBJS) $(USER_OBJS) C:\Users\Macante\Desktop\Embedded-Recruit-Training\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Embedded-Recruit-Training.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Macante\Desktop\Embedded-Recruit-Training\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Embedded-Recruit-Training.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Embedded-Recruit-Training.elf Embedded-Recruit-Training.map: $(OBJS) $(USER_OBJS) C:\Users\MacKante\Desktop\Embedded-Recruit-Training\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Embedded-Recruit-Training.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\MacKante\Desktop\Embedded-Recruit-Training\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Embedded-Recruit-Training.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

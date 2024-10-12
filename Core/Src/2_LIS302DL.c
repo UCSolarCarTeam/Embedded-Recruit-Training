@@ -9,7 +9,6 @@ void lis302dl_Read_Register(uint8_t address, uint8_t* buffer) {
 	/* TODO: Implement this
 	 * Step 1: Write CS pin to low state (GPIO_PIN_RESET)
 	 * Step 2: Transmit address of register you wish to write to
-	 * 	- Note: use command as the register address
 	 * Step 3: Read data from specified register
 	 * Step 4: Write CS pin to high state (GPIO_PIN_SET)
 	 *
@@ -18,9 +17,10 @@ void lis302dl_Read_Register(uint8_t address, uint8_t* buffer) {
 
 	uint8_t command = (address & 0x3F) | 0x80;
 
-	HAL_GPIO_WritePin(GPIOx, GPIO_Pin, PinState);
-	HAL_SPI_Transmit(hspi, pData, Size, Timeout);
-	HAL_SPI_Receive(hspi, pData, Size, Timeout);
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+	HAL_SPI_Transmit(&hspi1, &command, 1, HAL_MAX_DELAY);
+	HAL_SPI_Receive(&hspi1, buffer, 1, HAL_MAX_DELAY);
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
 
 }
 
@@ -28,7 +28,6 @@ void lis302dl_Write_Register(uint8_t address, uint8_t value) {
 	/* TODO: Implement this
 	 * Step 1: Write CS pin to low state (GPIO_PIN_RESET)
 	 * Step 2: Transmit address of register you wish to write to
-	 * 	- Note: use command as the register address
 	 * Step 3: Transmit data you wish to write to register
 	 * Step 4: Write CS pin to high state (GPIO_PIN_SET)
 	 *
@@ -37,9 +36,10 @@ void lis302dl_Write_Register(uint8_t address, uint8_t value) {
 
 	uint8_t command[] = {(address & 0x3F), value};
 
-	HAL_GPIO_WritePin(GPIOx, GPIO_Pin, PinState);
-	HAL_SPI_Transmit(hspi, pData, Size, Timeout);
-	HAL_SPI_Receive(hspi, pData, Size, Timeout);
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+	HAL_SPI_Transmit(&hspi1, &command, 2, HAL_MAX_DELAY);
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+
 }
 
 
