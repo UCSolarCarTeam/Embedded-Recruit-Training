@@ -14,7 +14,8 @@ void read_ADC(uint32_t* adc_raw_value, float* adc_percentage) {
 	// Useful functions
 	HAL_ADC_Start(&hadc1);
 	HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-	HAL_ADC_GetValue(&hadc1);
+	*adc_raw_value = HAL_ADC_GetValue(&hadc1);
+	*adc_percentage = ((float)*adc_raw_value / (4096.0)) * 100.0;
 	HAL_ADC_Stop(&hadc1);
 
 	HAL_Delay(100);

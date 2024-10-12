@@ -170,7 +170,6 @@ int main(void)
   MX_I2C3_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  
   lis302dl_Init();
 
   if (ONBOARDING_TASK == Task3_I2C) {
@@ -200,7 +199,7 @@ int main(void)
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
-  SPI_TaskHandle = osThreadNew(SPI_Task, NULL, &SPI_Task_attributes);
+  //SPI_TaskHandle = osThreadNew(SPI_Task, NULL, &SPI_Task_attributes);
   I2C_TaskHandle = osThreadNew(I2C_Task, NULL, &I2C_Task_attributes);
   ADC_TaskHandle = osThreadNew(ADC_Task, NULL, &ADC_Task_attributes);
 
@@ -221,31 +220,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  switch (ONBOARDING_TASK) {
-		  case Task0_GPIO:
-			  blinky_LED();
-			  break;
-
-		  case Task1_UART:
-			  UART_Transmit(uart_tx_buffer, sizeof(uart_tx_buffer));
-			  HAL_Delay(500);
-			  break;
-
-		  case Task2_SPI:
-			  if (who_am_i == 0x3F) {
-				  lis302dl_Poll_Data(&x, &y, &z);
-			  }
-			  break;
-
-		  case Task3_I2C:
-			  tsl2591_Poll_Data(&C0DATA, &C1DATA);
-			  HAL_Delay(250);
-			  break;
-
-		  case Task4_ADC:
-			  read_ADC(&adc_raw_value, &adc_percentage);
-			  break;
-	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
