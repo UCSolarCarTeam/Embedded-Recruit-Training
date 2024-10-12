@@ -29,6 +29,7 @@
 #include "2_LIS302DL.h"
 #include "3_TSL2591.h"
 #include "4_Potentiometer.h"
+#include "RTOS_Tasks.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -72,6 +73,31 @@ const osThreadAttr_t defaultTask_attributes = {
 };
 
 /* USER CODE BEGIN PV */
+
+//Definitons for SPI Task
+osThreadId_t SPI_TaskHandle;
+const osThreadAttr_t SPI_Task_attributes = {
+  .name = "SPI_Task",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+
+//Definitions for I2C Task
+osThreadId_t I2C_TaskHandle;
+const osThreadAttr_t I2C_Task_attributes = {
+  .name = "I2C_Task",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+
+//Definitions for ADC Task
+osThreadId_t ADC_TaskHandle;
+const osThreadAttr_t ADC_Task_attributes = {
+  .name = "ADC_Task",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+
 // Current Task
 task_t ONBOARDING_TASK = 0;
 
@@ -144,12 +170,8 @@ int main(void)
   MX_I2C3_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t who_am_i;
-  if (ONBOARDING_TASK == Task2_SPI) {
-	  lis302dl_Init();
-	  lis302dl_Read_Register(Who_Am_I_REG_ADDR, &who_am_i);
-	  HAL_Delay(1);
-  }
+  
+  lis302dl_Init();
 
   if (ONBOARDING_TASK == Task3_I2C) {
 	  tsl2591_Init();
@@ -178,6 +200,9 @@ int main(void)
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  SPI_TaskHandle = osThreadNew(SPI_Task, NULL, &SPI_Task_attributes);
+  I2C_TaskHandle = osThreadNew(I2C_Task, NULL, &I2C_Task_attributes);
+  ADC_TaskHandle = osThreadNew(ADC_Task, NULL, &ADC_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

@@ -1,5 +1,5 @@
 ../Core/Src/2_LIS302DL.c:8:6:lis302dl_Read_Register	24	static
-../Core/Src/2_LIS302DL.c:31:6:lis302dl_Write_Register	24	static
-../Core/Src/2_LIS302DL.c:56:6:lis302dl_Init	8	static
-../Core/Src/2_LIS302DL.c:71:6:lis302dl_Display_Led	16	static
-../Core/Src/2_LIS302DL.c:105:6:lis302dl_Poll_Data	32	static
+../Core/Src/2_LIS302DL.c:27:6:lis302dl_Write_Register	24	static
+../Core/Src/2_LIS302DL.c:49:6:lis302dl_Init	8	static
+../Core/Src/2_LIS302DL.c:64:6:lis302dl_Display_Led	16	static
+../Core/Src/2_LIS302DL.c:98:6:lis302dl_Poll_Data	32	static
