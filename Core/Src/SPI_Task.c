@@ -15,7 +15,7 @@ void SPI_Task(void *argument){
 
         char formatted_buffer[50];  // Buffer to store the formatted string
         int formatted_length = snprintf(formatted_buffer, sizeof(formatted_buffer),
-                                "X Data: %d, Y Data: %d, Z Data: %d\n", x, y, z);
+                                "X Data: %d, Y Data: %d, Z Data: %d\r\n", x, y, z);
 
         UART_Transmit((uint8_t*) formatted_buffer, formatted_length);   
         osDelay(200);

@@ -104,16 +104,6 @@ task_t ONBOARDING_TASK = 0;
 // UART variables
 uint8_t uart_tx_buffer[] = "Welcome to Solar Car!\n\r";
 
-// Potentiometer variables
-uint32_t adc_raw_value;
-float adc_percentage;
-
-// Accelerometer (SPI) variables
-int8_t x, y, z;
-
-// Lux Sensor (I2C) variables
-uint8_t C0DATA;
-uint8_t C1DATA;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -171,10 +161,7 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   lis302dl_Init();
-
-  if (ONBOARDING_TASK == Task3_I2C) {
-	  tsl2591_Init();
-  }
+  tsl2591_Init();
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -201,7 +188,7 @@ int main(void)
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
   //SPI_TaskHandle = osThreadNew(SPI_Task, NULL, &SPI_Task_attributes);
   I2C_TaskHandle = osThreadNew(I2C_Task, NULL, &I2C_Task_attributes);
-  ADC_TaskHandle = osThreadNew(ADC_Task, NULL, &ADC_Task_attributes);
+  // ADC_TaskHandle = osThreadNew(ADC_Task, NULL, &ADC_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

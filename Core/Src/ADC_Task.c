@@ -16,7 +16,7 @@ void ADC_Task(void *argument) {
 
         char formatted_buffer[50];  // Buffer to store the formatted string
         int formatted_length = snprintf(formatted_buffer, sizeof(formatted_buffer),
-                                "ADC Raw Val: %lu \n",
+                                "ADC Raw Val: %lu \r\n",
                                 (unsigned long)adc_raw_value); //Percentage formatting is L just ignoring for now
         
 
