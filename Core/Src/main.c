@@ -98,6 +98,12 @@ const osThreadAttr_t ADC_Task_attributes = {
   .priority = (osPriority_t) osPriorityNormal,
 };
 
+osMutexId_t UART_Mutex;
+const osMutexAttr_t UART_MUTEX_attributes = {
+  .name = "UART Mutex",
+  .attr_bits = osMutexPrioInherit,
+};
+
 // Current Task
 task_t ONBOARDING_TASK = 0;
 
@@ -168,6 +174,7 @@ int main(void)
   osKernelInitialize();
 
   /* USER CODE BEGIN RTOS_MUTEX */
+  UART_Mutex = osMutexNew(&UART_MUTEX_attributes);
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
@@ -186,9 +193,9 @@ int main(void)
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
-  //SPI_TaskHandle = osThreadNew(SPI_Task, NULL, &SPI_Task_attributes);
+  SPI_TaskHandle = osThreadNew(SPI_Task, NULL, &SPI_Task_attributes);
   I2C_TaskHandle = osThreadNew(I2C_Task, NULL, &I2C_Task_attributes);
-  // ADC_TaskHandle = osThreadNew(ADC_Task, NULL, &ADC_Task_attributes);
+  ADC_TaskHandle = osThreadNew(ADC_Task, NULL, &ADC_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

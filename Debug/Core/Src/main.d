@@ -46,8 +46,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
  ../Core/Inc/0_BlinkyLED.h ../Core/Inc/1_UART.h ../Core/Inc/2_LIS302DL.h \
  ../Core/Inc/3_TSL2591.h ../Core/Inc/4_Potentiometer.h \
- ../Core/Inc/RTOS_Tasks.h ../Core/Inc/ADC_Task.h ../Core/Inc/SPI_Task.h \
- ../Core/Inc/I2C_Task.h
+ ../Core/Inc/RTOS_Tasks.h ../Core/Inc/ADC_Task.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
+ ../Core/Inc/SPI_Task.h ../Core/Inc/I2C_Task.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -101,5 +102,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/4_Potentiometer.h:
 ../Core/Inc/RTOS_Tasks.h:
 ../Core/Inc/ADC_Task.h:
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 ../Core/Inc/SPI_Task.h:
 ../Core/Inc/I2C_Task.h:

@@ -6,6 +6,9 @@
 #include "stm32f4xx_hal_gpio.h"
 #include "stm32f4xx_hal_uart.h"
 #include <stdio.h>
+#include "RTOS_Tasks.h"
+#include "cmsis_os2.h"
+#include "SPI_Task.h"
 
 
 void SPI_Task(void *argument){
@@ -17,7 +20,12 @@ void SPI_Task(void *argument){
         int formatted_length = snprintf(formatted_buffer, sizeof(formatted_buffer),
                                 "X Data: %d, Y Data: %d, Z Data: %d\r\n", x, y, z);
 
-        UART_Transmit((uint8_t*) formatted_buffer, formatted_length);   
+        osStatus_t mutexAcquireReturnCode = osMutexAcquire(UART_Mutex, HAL_MAX_DELAY);
+
+        if(mutexAcquireReturnCode == osOK){
+            UART_Transmit((uint8_t*) formatted_buffer, formatted_length);   
+            osStatus_t mutexReleaseReturnCode = osMutexRelease(UART_Mutex);
+        }
         osDelay(200);
     }
 }
