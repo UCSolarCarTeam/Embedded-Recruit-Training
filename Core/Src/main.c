@@ -61,17 +61,17 @@ I2C_HandleTypeDef hi2c3;
 
 SPI_HandleTypeDef hspi1;
 
+TIM_HandleTypeDef htim1;
+
 UART_HandleTypeDef huart2;
 
 /* Definitions for defaultTask */
-
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
   .name = "defaultTask",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-
 /* USER CODE BEGIN PV */
 
 //Definitons for SPI Task
@@ -98,6 +98,14 @@ const osThreadAttr_t ADC_Task_attributes = {
   .priority = (osPriority_t) osPriorityNormal,
 };
 
+//Definitions for Blink LED Task
+osThreadId_t BlinkLED_TaskHandle;
+const osThreadAttr_t BlinkLED_Task_attributes = {
+  .name = "BlinkLED_Task",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityAboveNormal,
+};
+
 osMutexId_t UART_Mutex;
 const osMutexAttr_t UART_MUTEX_attributes = {
   .name = "UART Mutex",
@@ -120,6 +128,7 @@ static void MX_SPI1_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_I2C3_Init(void);
 static void MX_USART2_UART_Init(void);
+static void MX_TIM1_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -165,6 +174,7 @@ int main(void)
   MX_ADC1_Init();
   MX_I2C3_Init();
   MX_USART2_UART_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   lis302dl_Init();
   tsl2591_Init();
@@ -184,6 +194,7 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
+  HAL_TIM_Base_Start_IT(&htim1);
   /* USER CODE END RTOS_TIMERS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
@@ -193,9 +204,10 @@ int main(void)
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
-  SPI_TaskHandle = osThreadNew(SPI_Task, NULL, &SPI_Task_attributes);
-  I2C_TaskHandle = osThreadNew(I2C_Task, NULL, &I2C_Task_attributes);
-  ADC_TaskHandle = osThreadNew(ADC_Task, NULL, &ADC_Task_attributes);
+  // SPI_TaskHandle = osThreadNew(SPI_Task, NULL, &SPI_Task_attributes);
+  // I2C_TaskHandle = osThreadNew(I2C_Task, NULL, &I2C_Task_attributes);
+  // ADC_TaskHandle = osThreadNew(ADC_Task, NULL, &ADC_Task_attributes);
+  BlinkLED_TaskHandle = osThreadNew(BlinkLED_Task, NULL,&BlinkLED_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -425,6 +437,55 @@ static void MX_SPI1_Init(void)
 }
 
 /**
+  * @brief TIM1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM1_Init(void)
+{
+
+  /* USER CODE BEGIN TIM1_Init 0 */
+
+  /* USER CODE END TIM1_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM1_Init 1 */
+
+  /* USER CODE END TIM1_Init 1 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 64000;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = 5000;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_ETRMODE2;
+  sClockSourceConfig.ClockPolarity = TIM_CLOCKPOLARITY_NONINVERTED;
+  sClockSourceConfig.ClockPrescaler = TIM_CLOCKPRESCALER_DIV1;
+  sClockSourceConfig.ClockFilter = 0;
+  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM1_Init 2 */
+
+  /* USER CODE END TIM1_Init 2 */
+
+}
+
+/**
   * @brief USART2 Initialization Function
   * @param None
   * @retval None
@@ -622,6 +683,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
+  if(htim->Instance == TIM1){
+    osThreadFlagsSet(BlinkLED_TaskHandle, TMR1_INTERRUPT_FLAG);
+  }
 
   /* USER CODE END Callback 1 */
 }

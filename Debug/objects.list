@@ -4,6 +4,7 @@
 "./Core/Src/3_TSL2591.o"
 "./Core/Src/4_Potentiometer.o"
 "./Core/Src/ADC_Task.o"
+"./Core/Src/Blink_LED.o"
 "./Core/Src/I2C_Task.o"
 "./Core/Src/SPI_Task.o"
 "./Core/Src/freertos.o"
