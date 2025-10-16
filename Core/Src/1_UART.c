@@ -9,3 +9,5 @@ void UART_Transmit(uint8_t* buffer, uint16_t buffer_size) {
 
 	HAL_UART_Transmit(huart, pData, Size, Timeout);
 }
+
+//test!!!
