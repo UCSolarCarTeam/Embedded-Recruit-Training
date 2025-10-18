@@ -63,7 +63,7 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 // Current Task
-task_t ONBOARDING_TASK = 2;
+task_t ONBOARDING_TASK = 3;
 
 // UART variables
 uint8_t uart_tx_buffer[] = "Welcome to Solar Car!\n\r";

@@ -1,19 +1,24 @@
 #include "3_TSL2591.h"
 #include "stm32f4xx_hal_i2c.h"
 
-
+#define TSL2591_CMD (0x80 | 0x20)
 
 /*
  * Read specified register from Lux Sensor
  */
 void tsl2591_Read_Byte(uint8_t address, uint8_t* buffer) {
+
+		address = address | 0xA0;
+	    HAL_I2C_Mem_Read(&hi2c3, (TSL2591_DEVICE_ADDR << 1), address ,I2C_MEMADD_SIZE_8BIT, buffer, 1, HAL_MAX_DELAY);
+
+
 	/* TODO: Implement this
 	 * Use the following function to communicate with the peripheral
 	 */
 
-	address = address | 0xA0;
+	//address = address | 0xA0;
 
-	HAL_I2C_Mem_Read(&hi2c3, (TSL2591_DEVICE_ADDR << 1), address, I2C_MEMADD_SIZE_8BIT, buffer, 1, HAL_MAX_DELAY);
+	//HAL_I2C_Mem_Read(&hi2c3, (TSL2591_DEVICE_ADDR << 1), address, I2C_MEMADD_SIZE_8BIT, buffer, 1, HAL_MAX_DELAY);
 
 	// HAL_I2C_Mem_Read(hi2c, DevAddress, MemAddress, MemAddSize, pData, Size, Timeout);
 	/* uint16_t DevAddress: I2C address of the device.
@@ -31,14 +36,20 @@ void tsl2591_Read_Byte(uint8_t address, uint8_t* buffer) {
  * Write to specific register in Lux Sensor
  */
 void tsl2591_Write_Byte(uint8_t address, uint8_t value) {
+
+		address = address | 0xA0;
+	    uint8_t data = value;
+
+	    HAL_I2C_Mem_Write(&hi2c3, (TSL2591_DEVICE_ADDR << 1), address, I2C_MEMADD_SIZE_8BIT, &data, 1, HAL_MAX_DELAY);
+
 	/* TODO: Implement this
 	 * Use the following function to communicate with the peripheral
 	 */
 
-	address = address | 0xA0;
-	uint8_t data = value;
+	//address = address | 0xA0;
+	//uint8_t data = value;
 
-	HAL_I2C_Mem_Write(hi2c, DevAddress, MemAddress, MemAddSize, pData, Size, Timeout);
+//	HAL_I2C_Mem_Write(hi2c, DevAddress, MemAddress, MemAddSize, pData, Size, Timeout);
 	/* uint16_t  DevAddress: I2C address of the device.
 	 * uint16_t MemAddress: Memory/register address within the device.
 	 * uint16_t MemAddSize: Size of the memory address (typically I2C_MEMADD_SIZE_8BIT or I2C_MEMADD_SIZE_16BIT).
