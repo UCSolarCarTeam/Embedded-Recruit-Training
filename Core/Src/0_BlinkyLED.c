@@ -15,10 +15,32 @@ void blinky_LED() {
 	 *
 	 * PinState: GPIO_PIN_RESET/GPIO_PIN_SET
 	 */
-
-	HAL_GPIO_TogglePin(GPIOx, GPIO_Pin);
-	HAL_GPIO_WritePin(GPIOx, GPIO_Pin, PinState);
+while(1){
+	HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
 
 	// Delay in milliseconds
-	HAL_Delay(Delay);
+	HAL_Delay(200);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
+
+	// Delay in milliseconds
+	HAL_Delay(200);
+
+	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
+
+	// Delay in milliseconds
+	HAL_Delay(200);
+
+	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
+
+	// Delay in milliseconds
+	HAL_Delay(200);
+
 }
