@@ -38,7 +38,7 @@ void tsl2591_Write_Byte(uint8_t address, uint8_t value) {
 	address = address | 0xA0;
 	uint8_t data = value;
 
-	HAL_I2C_Mem_Write(hi2c, DevAddress, MemAddress, MemAddSize, pData, Size, Timeout);
+	HAL_I2C_Mem_Write(&hi2c3, (TSL2591_DEVICE_ADDR << 1), address, I2C_MEMADD_SIZE_8BIT, &data, 1, HAL_MAX_DELAY);
 	/* uint16_t  DevAddress: I2C address of the device.
 	 * uint16_t MemAddress: Memory/register address within the device.
 	 * uint16_t MemAddSize: Size of the memory address (typically I2C_MEMADD_SIZE_8BIT or I2C_MEMADD_SIZE_16BIT).

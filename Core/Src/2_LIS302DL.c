@@ -18,10 +18,10 @@ void lis302dl_Read_Register(uint8_t address, uint8_t* buffer) {
 
 	uint8_t command = (address & 0x3F) | 0x80;
 
-	HAL_GPIO_WritePin(GPIOx, GPIO_Pin, PinState);
-	HAL_SPI_Transmit(hspi, pData, Size, Timeout);
-	HAL_SPI_Receive(hspi, pData, Size, Timeout);
-
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+	HAL_SPI_Transmit(&hspi1, &command, sizeof(command), HAL_MAX_DELAY);
+	HAL_SPI_Receive(&hspi1, &command, sizeof(command), HAL_MAX_DELAY);
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
 }
 
 void lis302dl_Write_Register(uint8_t address, uint8_t value) {
@@ -37,9 +37,10 @@ void lis302dl_Write_Register(uint8_t address, uint8_t value) {
 
 	uint8_t command[] = {(address & 0x3F), value};
 
-	HAL_GPIO_WritePin(GPIOx, GPIO_Pin, PinState);
-	HAL_SPI_Transmit(hspi, pData, Size, Timeout);
-	HAL_SPI_Receive(hspi, pData, Size, Timeout);
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+	HAL_SPI_Transmit(&hspi1, command, sizeof(command), HAL_MAX_DELAY);
+	HAL_SPI_Receive(&hspi1, command, sizeof(command), HAL_MAX_DELAY);
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
 }
 
 

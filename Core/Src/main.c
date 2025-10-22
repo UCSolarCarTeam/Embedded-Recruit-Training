@@ -63,7 +63,7 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 // Current Task
-task_t ONBOARDING_TASK = 2;
+task_t ONBOARDING_TASK = Task0_GPIO;
 
 // UART variables
 uint8_t uart_tx_buffer[] = "Welcome to Solar Car!\n\r";
@@ -118,7 +118,7 @@ int main(void)
   /* USER CODE END Init */
 
   /* Configure the system clock */
-  SystemClock_Config();
+ // SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
 
