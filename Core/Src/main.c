@@ -65,12 +65,43 @@ UART_HandleTypeDef huart2;
 /* Definitions for defaultTask */
 
 osThreadId_t defaultTaskHandle;
+
+//----------------------------------------------------------------------------------------------------------------------
+osThreadId_t spiTaskID, i2cTaskID, adcTaskID, blinkTaskID;
+//----------------------------------------------------------------------------------------------------------------------
+
+
 const osThreadAttr_t defaultTask_attributes = {
   .name = "defaultTask",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 
+//-----------------------------------------------------------------------------------------------------------------------------------
+static const osThreadAttr_t spiTask_attr   = {
+		.name="spiTask",
+		.stack_size=128 * 4,
+		.priority=(osPriority_t)osPriorityNormal
+};
+static const osThreadAttr_t i2cTask_attr   = {
+		.name="i2cTask",
+		.stack_size=128 * 4,
+		.priority=(osPriority_t)osPriorityNormal
+};
+static const osThreadAttr_t adcTask_attr   = {
+		.name="adcTask",
+		.stack_size=128 * 4,
+		.priority=(osPriority_t)osPriorityNormal
+};
+static const osThreadAttr_t blinkTask_attr = {
+		.name="blinkSup",
+		.stack_size=128 * 4,
+		.priority=(osPriority_t)osPriorityAboveNormal
+};
+
+//---------------------------------------------------------------------------------------------------------------------------------------------
+
+osThreadAttr_t;
 /* USER CODE BEGIN PV */
 // Current Task
 task_t ONBOARDING_TASK = 0;
@@ -84,6 +115,7 @@ float adc_percentage;
 
 // Accelerometer (SPI) variables
 int8_t x, y, z;
+uint8_t who_am_i;
 
 // Lux Sensor (I2C) variables
 uint8_t C0DATA;
@@ -113,8 +145,26 @@ void StartDefaultTask(void *argument);
   * @brief  The application entry point.
   * @retval int
   */
+
+static void spiTask(void *arg) {
+	  lis302dl_Init();
+	  lis302dl_Read_Register(Who_Am_I_REG_ADDR, &who_am_i);
+	  osDelay(500);
+}
+
+static void i2cTask(void *arg) {
+		tsl2591_Init();
+		osDelay(500);
+  }
+
+static void adcTask(void *arg) {
+		read_ADC(adc_raw_value, &adc_percentage);
+		osDelay(500);
+}
+
 int main(void)
 {
+
 
   /* USER CODE BEGIN 1 */
 
@@ -144,7 +194,9 @@ int main(void)
   MX_I2C3_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+
   uint8_t who_am_i;
+
   if (ONBOARDING_TASK == Task2_SPI) {
 	  lis302dl_Init();
 	  lis302dl_Read_Register(Who_Am_I_REG_ADDR, &who_am_i);
@@ -178,6 +230,8 @@ int main(void)
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+
+  spiTaskID = osThreadNew(spiTask, NULL, &spiTask_attr);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

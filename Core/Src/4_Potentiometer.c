@@ -11,11 +11,18 @@ void read_ADC(uint32_t* adc_raw_value, float* adc_percentage) {
 	 * Step 5: Stop ADC
 	 */
 
+	 HAL_ADC_Start(&hadc1);
+	 HAL_ADC_PollForConversion(&hadc1, 10);
+	 *adc_raw_value = HAL_ADC_GetValue(&hadc1);
+	 *adc_percentage = ((*adc_raw_value) / 4095.0f) * 100.0f;
+	 HAL_ADC_Stop(&hadc1);
+
 	// Useful functions
-	HAL_ADC_Start(hadc);
-	HAL_ADC_PollForConversion(hadc, Timeout);
-	HAL_ADC_GetValue(hadc);
-	HAL_ADC_Stop(hadc);
+	//HAL_ADC_Start(hadc);
+//	HAL_ADC_PollForConversion(hadc, Timeout);
+//	HAL_ADC_GetValue(hadc);
+//	HAL_ADC_Stop(hadc);
 
 	HAL_Delay(100);
+
 }

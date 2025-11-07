@@ -10,11 +10,6 @@ void tsl2591_Read_Byte(uint8_t address, uint8_t* buffer) {
 	/* TODO: Implement this
 	 * Use the following function to communicate with the peripheral
 	 */
-
-	address = address | 0xA0;
-
-	HAL_I2C_Mem_Read(&hi2c3, (TSL2591_DEVICE_ADDR << 1), address, I2C_MEMADD_SIZE_8BIT, buffer, 1, HAL_MAX_DELAY);
-
 	// HAL_I2C_Mem_Read(hi2c, DevAddress, MemAddress, MemAddSize, pData, Size, Timeout);
 	/* uint16_t DevAddress: I2C address of the device.
 	 * uint16_t MemAddress: Memory/register address within the device.
@@ -23,6 +18,10 @@ void tsl2591_Read_Byte(uint8_t address, uint8_t* buffer) {
 	 * uint16_t Size: Amount of data to read.
 	 * uint32_t Timeout: Timeout duration.
 	 */
+
+	address = address | 0xA0;
+
+	HAL_I2C_Mem_Read(&hi2c3, (TSL2591_DEVICE_ADDR << 1), address, I2C_MEMADD_SIZE_8BIT, buffer, 1, HAL_MAX_DELAY);
 
 }
 
